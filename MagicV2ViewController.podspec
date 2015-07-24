@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "MagicV2ViewController"
-  s.version      = "2.04"
+  s.version      = "2.05"
   s.summary      = "An all in one solution used to paginate, pull to refresh, display an empty state view and handle cashed Data UITableViewController."
 
   s.description  = <<-DESC
@@ -78,7 +78,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/rapinto/MagicV2ViewController.git", :tag => "v2.04" }
+  s.source       = { :git => "https://github.com/rapinto/MagicV2ViewController.git", :tag => "v2.05" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
