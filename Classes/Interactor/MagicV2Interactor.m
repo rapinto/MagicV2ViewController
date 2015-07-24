@@ -1,5 +1,5 @@
 //
-//  MagicV2Model.m
+//  MagicV2Interactor.m
 //
 //
 //  Created by Raphaël Pinto on 21/07/2015.

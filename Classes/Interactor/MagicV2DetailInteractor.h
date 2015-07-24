@@ -1,5 +1,5 @@
 //
-//  MagicV2DetailModel.h
+//  MagicV2DetailInteractor.h
 //
 //
 //  Created by Raphaël Pinto on 21/07/2015.

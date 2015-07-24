@@ -1,5 +1,5 @@
 //
-//  MagicV2ListModel.m
+//  MagicV2ListInteractor.m
 //
 //
 //  Created by Raphaël Pinto on 21/07/2015.
