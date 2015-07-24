@@ -129,13 +129,6 @@
 
 
 
-- (void)resetInteractors
-{
-    
-    
-}
-
-
 - (void)loadInteractorRequestsForLoadingType:(MagicV2TableViewLoadingType)_LoadingType
 {
     if (_detailInteractor)
@@ -271,8 +264,6 @@
 
 - (void)diTriggerPullToRefresh:(id)sender
 {
-    [self resetInteractors];
-    
     if (_detailInteractor)
     {
         [_detailInteractor pullToRefreshTriggered];
