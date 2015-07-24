@@ -174,7 +174,7 @@
 }
 
 
-- (UITableViewCell*)noResultCellForTableView:(UITableView*)tableView section:(NSInteger)section
+- (UITableViewCell*)noResultCellForTableView:(UITableView*)tableView
 {
     MagicV2NoResultsCell* lCell = [tableView dequeueReusableCellWithIdentifier:@"MagicV2NoResultsCell"];
     
@@ -327,7 +327,7 @@
     {
         if ([_listInteractor.results count] == 0)
         {
-            return [self noResultCellForTableView:tableView section:indexPath.section];
+            return [self noResultCellForTableView:tableView];
         }
         else if ([_listInteractor.results count] > indexPath.row)
         {
