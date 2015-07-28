@@ -44,11 +44,5 @@
 }
 
 
-- (void)dealloc
-{
-    HNLog(@"");
-}
-
-
 
 @end

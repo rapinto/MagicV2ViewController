@@ -52,12 +52,6 @@
 }
 
 
-- (void)dealloc
-{
-    HNLog(@"");
-}
-
-
 
 #pragma mark -
 #pragma mark Request Sending Methods

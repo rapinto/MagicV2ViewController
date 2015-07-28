@@ -55,12 +55,6 @@
 }
 
 
-- (void)dealloc
-{
-    HNLog(@"");
-}
-
-
 
 #pragma mark -
 #pragma mark Data Management Methods
