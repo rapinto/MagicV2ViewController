@@ -1,5 +1,5 @@
 //
-//  MagicV2ListInteractor.h
+//  MagicV2ListModel.h
 //
 //
 //  Created by Raphaël Pinto on 21/07/2015.

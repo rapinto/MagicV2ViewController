@@ -38,7 +38,7 @@
 
 @protocol MagicV2TableHeaderViewDelegate <NSObject>
 
-- (void)updateMagicHeaderViewForMagicController:(MagicV2ViewController*)viewController;
+- (float)updateMagicHeaderViewAndReturnNewHeightForMagicController:(MagicV2ViewController*)viewController;
 
 @end
 

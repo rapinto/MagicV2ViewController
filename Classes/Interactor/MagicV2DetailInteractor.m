@@ -1,5 +1,5 @@
 //
-//  MagicV2DetailInteractor.m
+//  MagicV2DetailModel.m
 //
 //
 //  Created by Raphaël Pinto on 21/07/2015.
@@ -57,6 +57,12 @@
     self.loadingType = kMagicV2TableViewLoadingType_NotLoading;
     
     [_delegate magicDetailInteractorDidReceivedResults:self forLoadingType:lPreviousLoadingType];
+}
+
+
+- (void)dealloc
+{
+    HNLog(@"");
 }
 
 

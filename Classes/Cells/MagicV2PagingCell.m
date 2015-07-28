@@ -46,5 +46,11 @@
 }
 
 
+- (void)dealloc
+{
+    HNLog(@"");
+}
+
+
 
 @end

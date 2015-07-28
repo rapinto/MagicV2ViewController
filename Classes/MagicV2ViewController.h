@@ -1,5 +1,5 @@
 //
-//  MagicV2NoResultsCell.m
+//  MagicV2ViewController.h
 //
 //
 //  Created by Raphaël Pinto on 21/07/2015.
@@ -27,30 +27,38 @@
 
 
 
-#import "MagicV2NoResultsCell.h"
+#import <UIKit/UIKit.h>
+#import "MagicV2ListInteractor.h"
+#import "MagicV2DetailInteractor.h"
 
 
 
-@implementation MagicV2NoResultsCell
+@protocol MagicV2TableHeaderViewDelegate;
 
 
 
-#pragma mark -
-#pragma mark Data Management Methods
+@class MagicV2ListInteractor, MagicV2DetailInteractor;
 
 
 
-+ (CGFloat)cellHeight
-{
-    return 44.0f;
-}
+@interface MagicV2ViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, MagicV2ListInteractorDelegate, MagicV2DetailInteractorDelegate>
 
 
-- (void)dealloc
-{
-    HNLog(@"");
-}
+
+@property (nonatomic) BOOL isPullToRefreshEnabled;
+@property (nonatomic, strong) MagicV2DetailInteractor* detailModel;
+@property (nonatomic, strong) MagicV2ListInteractor* listModel;
+@property (nonatomic, strong) IBOutlet UIView<MagicV2TableHeaderViewDelegate>* tableHeaderView;
+
+
+
+- (void)initDetailModel;
+- (void)initListModel;
 
 
 
 @end
+
+
+
+

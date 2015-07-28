@@ -1,5 +1,5 @@
 //
-//  MagicV2Interactor.m
+//  MagicV2Model.m
 //
 //
 //  Created by Raphaël Pinto on 21/07/2015.
@@ -51,6 +51,11 @@
     return self;
 }
 
+
+- (void)dealloc
+{
+    HNLog(@"");
+}
 
 
 
