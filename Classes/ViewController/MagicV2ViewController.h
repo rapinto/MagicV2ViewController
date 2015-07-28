@@ -46,14 +46,14 @@
 
 
 @property (nonatomic) BOOL isPullToRefreshEnabled;
-@property (nonatomic, strong) MagicV2DetailInteractor* detailInteractor;
-@property (nonatomic, strong) MagicV2ListInteractor* listInteractor;
+@property (nonatomic, strong) MagicV2DetailInteractor* detailModel;
+@property (nonatomic, strong) MagicV2ListInteractor* listModel;
 @property (nonatomic, strong) IBOutlet UIView<MagicV2TableHeaderViewDelegate>* tableHeaderView;
 
 
 
-- (void)initDetailInteractor;
-- (void)initListInteractor;
+- (void)initDetailModel;
+- (void)initListModel;
 
 
 

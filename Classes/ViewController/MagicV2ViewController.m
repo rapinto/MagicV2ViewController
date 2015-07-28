@@ -54,17 +54,30 @@
 {
     [super viewDidLoad];
     
-    [self initDetailInteractor];
-    _detailInteractor.delegate = self;
-    [self initListInteractor];
-    _listInteractor.delegate = self;
+    _isPullToRefreshEnabled = YES;
+    
+    [self initDetailModel];
+    _detailModel.delegate = self;
+    [self initListModel];
+    _listModel.delegate = self;
     [self initTableHeaderView];
     
     [self addEmptyFooterViewIfNeeded];
     [self initUIRefreshControl];
+}
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
-    
-    [self loadInteractorRequestsForLoadingType:kMagicV2TableViewLoadingType_Init];
+    [self loadModelRequestsForLoadingType:kMagicV2TableViewLoadingType_Init];
+}
+
+
+- (void)dealloc
+{
+    HNLog(@"");
 }
 
 
@@ -74,13 +87,13 @@
 
 
 // /!\ Need to be implemented to activate detail + list mode
-- (void)initDetailInteractor
+- (void)initDetailModel
 {
 }
 
 
 // /!\ Must be implemented
-- (void)initListInteractor
+- (void)initListModel
 {
     NSAssert(NO, @"This is an abstract method and should be overridden");
 }
@@ -91,7 +104,8 @@
 {
     if (!_tableHeaderView)
     {
-        _tableHeaderView = [self magicTableHeaderView];
+        _tableHeaderView = [self magicTableHeaderView];        
+        self.tableView.tableHeaderView = _tableHeaderView;
     }
 }
 
@@ -129,19 +143,26 @@
 
 
 
-- (void)loadInteractorRequestsForLoadingType:(MagicV2TableViewLoadingType)_LoadingType
+- (void)resetModels
 {
-    if (_detailInteractor)
+    
+    
+}
+
+
+- (void)loadModelRequestsForLoadingType:(MagicV2TableViewLoadingType)_LoadingType
+{
+    if (_detailModel)
     {
-        [_detailInteractor getResultsForLoadingType:_LoadingType];
+        [_detailModel getResultsForLoadingType:_LoadingType];
         
-        [self setHeaderViewForInteractor:_detailInteractor];
+        [self setHeaderViewForModel:_detailModel];
     }
-    else if (_listInteractor)
+    else if (_listModel)
     {
-        [_listInteractor getResultsForLoadingType:_LoadingType];
+        [_listModel getResultsForLoadingType:_LoadingType];
         
-        [self setHeaderViewForInteractor:_listInteractor];
+        [self setHeaderViewForModel:_listModel];
     }
 }
 
@@ -167,7 +188,7 @@
 }
 
 
-- (UITableViewCell*)noResultCellForTableView:(UITableView*)tableView
+- (UITableViewCell*)noResultCellForTableView:(UITableView*)tableView section:(NSInteger)section
 {
     MagicV2NoResultsCell* lCell = [tableView dequeueReusableCellWithIdentifier:@"MagicV2NoResultsCell"];
     
@@ -239,19 +260,25 @@
 
 
 
-- (void)setHeaderViewForInteractor:(MagicV2Interactor*)interactor
+- (void)setHeaderViewForModel:(MagicV2Interactor*)model
 {
     [self updateTableHeaderView];
-    
     self.tableView.tableHeaderView = _tableHeaderView;
 }
 
 
 - (void)updateTableHeaderView
 {
-    if (_tableHeaderView && [_tableHeaderView respondsToSelector:@selector(updateMagicHeaderViewForMagicController:)])
+    if (_tableHeaderView && [_tableHeaderView respondsToSelector:@selector(updateMagicHeaderViewAndReturnNewHeightForMagicController:)])
     {
-        [_tableHeaderView updateMagicHeaderViewForMagicController:self];
+        float lheight = [_tableHeaderView updateMagicHeaderViewAndReturnNewHeightForMagicController:self];
+        
+        _tableHeaderView.frame = CGRectMake(_tableHeaderView.frame.origin.x,
+                                            _tableHeaderView.frame.origin.y,
+                                            _tableHeaderView.frame.size.width,
+                                            lheight);
+        HNLog(@"HEHOOOO");
+        HNLogRect(_tableHeaderView.frame);
     }
 }
 
@@ -264,20 +291,22 @@
 
 - (void)diTriggerPullToRefresh:(id)sender
 {
-    if (_detailInteractor)
+    [self resetModels];
+    
+    if (_detailModel)
     {
-        [_detailInteractor pullToRefreshTriggered];
+        [_detailModel pullToRefreshTriggered];
     }
     else
     {
-        [_listInteractor pullToRefreshTriggered];
+        [_listModel pullToRefreshTriggered];
     }
 }
 
 
 - (void)didTriggerPaging
 {
-    [_listInteractor pagingTriggered];
+    [_listModel pagingTriggered];
 }
 
 
@@ -295,32 +324,32 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (_listInteractor.isPagingEnded)
+    if (_listModel.isPagingEnded)
     {
         self.tableView.contentInset = UIEdgeInsetsMake(self.tableView.contentInset.top,
                                                        self.tableView.contentInset.left,
                                                        [MagicV2PagingCell cellHeight],
                                                        self.tableView.contentInset.right);
-        return [_listInteractor.results count];
+        return [_listModel.results count];
     }
     
-    return [_listInteractor.results count] + 1;
+    return [_listModel.results count] + 1;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_detailInteractor.loadingType != kMagicV2TableViewLoadingType_NotLoading || _listInteractor.loadingType != kMagicV2TableViewLoadingType_NotLoading)
+    if (_detailModel.loadingType != kMagicV2TableViewLoadingType_NotLoading || _listModel.loadingType != kMagicV2TableViewLoadingType_NotLoading)
     {
         return [self defaultLoadingCellForTableView:tableView];
     }
     else
     {
-        if ([_listInteractor.results count] == 0)
+        if ([_listModel.results count] == 0)
         {
-            return [self noResultCellForTableView:tableView];
+            return [self noResultCellForTableView:tableView section:indexPath.section];
         }
-        else if ([_listInteractor.results count] > indexPath.row)
+        else if ([_listModel.results count] > indexPath.row)
         {
             return [self tableViewCellForTableView:tableView forIndexPath:indexPath];
         }
@@ -351,17 +380,17 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_detailInteractor.loadingType != kMagicV2TableViewLoadingType_NotLoading || _listInteractor.loadingType != kMagicV2TableViewLoadingType_NotLoading)
+    if (_detailModel.loadingType != kMagicV2TableViewLoadingType_NotLoading || _listModel.loadingType != kMagicV2TableViewLoadingType_NotLoading)
     {
         return [MagicV2DefaultLoadingCell cellHeight];
     }
     else
     {
-        if ([_listInteractor.results count] == 0)
+        if ([_listModel.results count] == 0)
         {
             return [MagicV2NoResultsCell cellHeight];
         }
-        else if ([_listInteractor.results count] > indexPath.row)
+        else if ([_listModel.results count] > indexPath.row)
         {
             return [self tableViewCellHeightForTableView:tableView forIndexPath:indexPath];
         }
@@ -386,11 +415,11 @@
     switch (loadingType)
     {
         case kMagicV2TableViewLoadingType_PullToRefresh:
-            [_listInteractor pullToRefreshTriggered];
+            [_listModel pullToRefreshTriggered];
             break;
         case kMagicV2TableViewLoadingType_Init:
-            [_listInteractor getResultsForLoadingType:kMagicV2TableViewLoadingType_Init];
-            [self setHeaderViewForInteractor:_listInteractor];
+            [_listModel getResultsForLoadingType:kMagicV2TableViewLoadingType_Init];
+            [self setHeaderViewForModel:_listModel];
             break;
         default:
             break;
