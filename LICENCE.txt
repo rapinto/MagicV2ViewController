@@ -1,6 +1,6 @@
 MagicV2ViewController
 
-Version 2.06, July 24th, 2015
+Version 2.07, July 24th, 2015
 
 Copyright (C) 2015 Raphaël Pinto
 
