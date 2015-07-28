@@ -77,7 +77,6 @@
 
 - (void)dealloc
 {
-    HNLog(@"");
 }
 
 
@@ -277,8 +276,6 @@
                                             _tableHeaderView.frame.origin.y,
                                             _tableHeaderView.frame.size.width,
                                             lheight);
-        HNLog(@"HEHOOOO");
-        HNLogRect(_tableHeaderView.frame);
     }
 }
 
